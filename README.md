@@ -1,0 +1,2 @@
+# Text_Rpg
+FromShowStatus_ToStartDungeon
