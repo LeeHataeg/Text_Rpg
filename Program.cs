@@ -337,8 +337,13 @@ namespace TextRpg_Test01
         }
         public static void GoStartingShop()
         {
+            //상점보다 장비 콘솔창 정렬 먼저 하기(그래야 상점창도 정렬하니까)
             Console.Clear();
-            Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("상점");
+            Console.ForegroundColor = ConsoleColor.White;
+
+
 
             //아래 무시
             Console.WriteLine();
