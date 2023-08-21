@@ -1,0 +1,14 @@
+D:\workspace\Sparta\C_study\IndividualAssignment\TextRpg_Test01\bin\Debug\net6.0\TextRpg_Test01.exe
+D:\workspace\Sparta\C_study\IndividualAssignment\TextRpg_Test01\bin\Debug\net6.0\TextRpg_Test01.deps.json
+D:\workspace\Sparta\C_study\IndividualAssignment\TextRpg_Test01\bin\Debug\net6.0\TextRpg_Test01.runtimeconfig.json
+D:\workspace\Sparta\C_study\IndividualAssignment\TextRpg_Test01\bin\Debug\net6.0\TextRpg_Test01.dll
+D:\workspace\Sparta\C_study\IndividualAssignment\TextRpg_Test01\bin\Debug\net6.0\TextRpg_Test01.pdb
+D:\workspace\Sparta\C_study\IndividualAssignment\TextRpg_Test01\obj\Debug\net6.0\TextRpg_Test01.GeneratedMSBuildEditorConfig.editorconfig
+D:\workspace\Sparta\C_study\IndividualAssignment\TextRpg_Test01\obj\Debug\net6.0\TextRpg_Test01.AssemblyInfoInputs.cache
+D:\workspace\Sparta\C_study\IndividualAssignment\TextRpg_Test01\obj\Debug\net6.0\TextRpg_Test01.AssemblyInfo.cs
+D:\workspace\Sparta\C_study\IndividualAssignment\TextRpg_Test01\obj\Debug\net6.0\TextRpg_Test01.csproj.CoreCompileInputs.cache
+D:\workspace\Sparta\C_study\IndividualAssignment\TextRpg_Test01\obj\Debug\net6.0\TextRpg_Test01.dll
+D:\workspace\Sparta\C_study\IndividualAssignment\TextRpg_Test01\obj\Debug\net6.0\refint\TextRpg_Test01.dll
+D:\workspace\Sparta\C_study\IndividualAssignment\TextRpg_Test01\obj\Debug\net6.0\TextRpg_Test01.pdb
+D:\workspace\Sparta\C_study\IndividualAssignment\TextRpg_Test01\obj\Debug\net6.0\TextRpg_Test01.genruntimeconfig.cache
+D:\workspace\Sparta\C_study\IndividualAssignment\TextRpg_Test01\obj\Debug\net6.0\ref\TextRpg_Test01.dll
