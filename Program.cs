@@ -20,6 +20,8 @@ namespace TextRpg_Test01
         private static Potion lowAtkPotion;
         private static Potion lowDefPotion;
 
+        //상점 판매 템
+        public static List<Item> shopItem = new List<Item>();
         //장비창(10칸)
         public static List<Item> myInven = new List<Item>(10);
         //장비 효과 수치
@@ -42,22 +44,30 @@ namespace TextRpg_Test01
 
             // 아이템 정보 세팅
             //방어구
-            steelArmor = new Armor("무쇠갑옷", 0, 5, "무쇠로 만들어져 튼튼한 갑옷입니다.");
-            leatherArmor = new Armor("가죽갑옷", 0, 2, "소가죽으로 만들어진 낡은 가죽갑옷.");
+            steelArmor = new Armor("무쇠갑옷", 0, 5, "무쇠로 만들어져 튼튼한 갑옷입니다.", 500);
+            leatherArmor = new Armor("가죽갑옷", 0, 2, "소가죽으로 만들어진 낡은 가죽갑옷.", 200);
 
             //무기
-            oldSword = new Weapon("낡은 검", 2, 0, "쉽게 볼 수 있는 낡은 검입니다.");
-            gladius = new Weapon("글라디우스", 6, 0, "찌르기에 특화된 사정거리 짧은 한손검.");
-            rapier = new Weapon("레이피어", 4, 0, "찌르기에 특화된 사정거리가 긴 한손검.");
+            oldSword = new Weapon("낡은 검", 2, 0, "쉽게 볼 수 있는 낡은 검입니다.", 800);
+            gladius = new Weapon("글라디우스", 6, 0, "찌르기에 특화된 사정거리 짧은 한손검.", 1000);
+            rapier = new Weapon("레이피어", 4, 0, "찌르기에 특화된 사정거리가 긴 한손검.", 900);
 
             //초기 아이템 세팅
             myInven.Add(steelArmor);
             myInven.Add(oldSword);
 
             //추가 아이템(포션) : 캐릭터 클래스에 최대 HP 필요
-            lowHpPotion = new Potion("하급 체력 포션", 0, 0, "초보 모험자들이 애용하는 물약. 치유량은 미미하다.(HP +3)", 3 );
-            lowAtkPotion = new Potion("하급 힘 포션", 2, 0, "저레벨 몬스터들을 재료로 고아낸 힘 물약.(Atk +2)", 0); ;
-            lowDefPotion = new Potion("하급 방어력 포션", 0, 2, "일부 몬스터들의 갑각을 재료로 고아낸 물약. 사용 후 피부가 갈라진다.(Def +2)", 0);
+            lowHpPotion = new Potion("하급 체력 포션", 0, 0, "초보 모험자들이 애용하는 물약. 치유량은 미미하다.(HP +3)", 3 , 500);
+            lowAtkPotion = new Potion("하급 힘 포션", 2, 0, "저레벨 몬스터들을 재료로 고아낸 힘 물약.(Atk +2)", 0, 500); ;
+            lowDefPotion = new Potion("하급 방어력 포션", 0, 2, "일부 몬스터들의 갑각을 재료로 고아낸 물약. 사용 후 피부가 갈라진다.(Def +2)", 0, 300);
+
+            //상점 판매 아이템
+            shopItem.Add(leatherArmor);
+            shopItem.Add(gladius);
+            shopItem.Add(rapier);
+            shopItem.Add(lowHpPotion);
+            shopItem.Add(lowAtkPotion);
+            shopItem.Add(lowDefPotion);
         }
         static void DisplayGameIntro()
         {
@@ -73,15 +83,15 @@ namespace TextRpg_Test01
             Console.ForegroundColor = ConsoleColor.Magenta;
             Console.Write("2");
             Console.ForegroundColor = ConsoleColor.White;
-            Console.Write(". 인벤토리");
+            Console.WriteLine(". 인벤토리");
             Console.ForegroundColor = ConsoleColor.Magenta;
             Console.Write("3");
             Console.ForegroundColor = ConsoleColor.White;
-            Console.Write(". 상점 방문");
+            Console.WriteLine(". 상점 방문");
             Console.WriteLine();
 
             Console.WriteLine("원하시는 행동을 입력해주세요.");
-
+            Console.Write(">>");
             int input = CheckValidInput(1, 3);
             switch (input)
             {
@@ -93,7 +103,7 @@ namespace TextRpg_Test01
                     DisplayInventory();
                     break;
                 case 3:
-                    GoStartingShop();
+                    DisplayShop();
                     break;
             }
         }
@@ -161,6 +171,8 @@ namespace TextRpg_Test01
             Console.Write("0");
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine(". 나가기");
+            Console.WriteLine("원하시는 행동을 입력해주세요.");
+            Console.Write(">>");
 
             int input = CheckValidInput(0, 0);
             switch (input)
@@ -335,29 +347,167 @@ namespace TextRpg_Test01
                     break;
             }
         }
-        public static void GoStartingShop()
+        public static void DisplayShop()
         {
             //상점보다 장비 콘솔창 정렬 먼저 하기(그래야 상점창도 정렬하니까)
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("상점");
             Console.ForegroundColor = ConsoleColor.White;
-
-
-
+            Console.WriteLine("필요한 아이템을 얻을 수 있는 상점입니다.");
+            Console.WriteLine();
+            Console.WriteLine("[보유 골드]");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.Write(player.Gold);
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("G");
             //아래 무시
             Console.WriteLine();
             Console.ForegroundColor = ConsoleColor.Magenta;
             Console.Write("0");
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine(". 나가기");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.Write("1");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine(". 구매");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.Write("2");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine(". 판매");
+            Console.WriteLine("원하시는 행동을 입력해주세요.");
+            Console.Write(">>");
 
-            int input = CheckValidInput(0, 0);
+            int input = CheckValidInput(0, 2);
             switch (input)
             {
                 case 0:
                     DisplayGameIntro();
                     break;
+                case 1:
+                    //DoBuy();
+                    break;
+                case 2:
+                    //DoSell();
+                    break;
+            }
+        }
+
+        public static void ShopBuy()
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("아이템 구매");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine();
+            Console.WriteLine("[보유 골드]");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.Write(player.Gold);
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("G");
+            int i = shopItem.Count();
+            int j = 0;
+
+            while (j < i)
+            {
+                Console.Write($"-   {shopItem[j].Item_Name}");
+                Console.ForegroundColor = ConsoleColor.White;
+                if (shopItem[j].Item_Atk == 0)
+                {
+                    //if Item == armor
+                    Console.Write("    | 방어력 ");
+                    Console.ForegroundColor = ConsoleColor.Magenta;
+                    Console.Write(shopItem[j].Item_Def);
+                }
+                else
+                {
+                    //if item == weapon
+                    Console.Write("    | 공격력 ");
+                    Console.ForegroundColor = ConsoleColor.Magenta;
+                    Console.Write(shopItem[j].Item_Atk);
+                }
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write(" | 가격 ");
+                Console.ForegroundColor = ConsoleColor.Magenta;
+                Console.Write(shopItem[j].Item_Gold);
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine($"G | {shopItem[j].Item_Discription}");
+
+                j++;
+            }
+            Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.Write("0");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine(". 나가기");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.Write("1~");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine(". 구매");
+            Console.WriteLine("원하시는 행동을 입력해주세요.");
+            Console.Write(">>");
+
+            int input = CheckValidInput(0, 6);
+            if(input == 0)
+            {
+                DisplayShop();
+            }
+            else
+            {
+                if(player.Gold < shopItem[i-1].Item_Gold)
+                {
+                    Console.WriteLine("소지하신 골드가 적습니다.");
+                    ShopBuy();
+                }
+                else
+                {
+                    Console.WriteLine("구매를 완료했습니다.");
+                    player.Gold -= shopItem[i-1].Item_Gold;
+                    myInven.Add(shopItem[i - 1]);
+                    //shopItem.RemoveAt();
+                    ShopBuy();
+                }
+            }
+        }
+        public static void ShopSell()
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("아이템 판매");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine();
+            Console.WriteLine("[보유 골드]");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.Write(player.Gold);
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("G");
+
+            int i = myInven.Count();
+            int j = 0;
+
+
+
+            Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.Write("0");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine(". 나가기");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.Write("1~");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine(". 판매");
+            Console.WriteLine("원하시는 행동을 입력해주세요.");
+            Console.Write(">>");
+
+            int input = CheckValidInput(0, i);
+            if(input == 0)
+            {
+                DisplayShop();
+            }
+            else
+            {
+                Console.WriteLine("판매를 완료했습니다.");
+                player.Gold += myInven[i - 1].Item_Gold*85/100;
+                shopItem.Add(myInven[i-1]);
+                myInven.RemoveAt(i-1);
             }
         }
         public static void EquipItem(int i)
@@ -443,48 +593,53 @@ namespace TextRpg_Test01
         public string Item_Name { get; set; }
         public int Item_Atk { get; set; }
         public int Item_Def { get; set; }
+        public int Item_Gold { get; set; }
         public string Item_Discription { get; set; }
-        public Item(string _item_name, int _item_atk, int _item_def, string _item_discription)
+        public Item(string _item_name, int _item_atk, int _item_def, string _item_discription, int _Item_Gold)
         {
             Item_Name = _item_name;
             Item_Atk = _item_atk;
             Item_Def = _item_def;
             Item_Discription = _item_discription;
+            Item_Gold = _Item_Gold;
         }
     }
 
     public class Weapon : Item
     {
-        public Weapon(string _item_name, int _item_atk, int _item_def, string _item_discription) : base(_item_name, _item_atk, _item_def, _item_discription)
+        public Weapon(string _item_name, int _item_atk, int _item_def, string _item_discription,int _Item_Gold) : base(_item_name, _item_atk, _item_def, _item_discription, _Item_Gold)
         {
             Item_Name = _item_name;
             Item_Atk = _item_atk;
             Item_Def = 0;
             Item_Discription = _item_discription;
+            Item_Gold = _Item_Gold;
         }
     }
 
     public class Armor : Item
     {
-        public Armor(string _item_name, int _item_atk, int _item_def, string _item_discription) : base(_item_name, _item_atk, _item_def, _item_discription)
+        public Armor(string _item_name, int _item_atk, int _item_def, string _item_discription, int _Item_Gold) : base(_item_name, _item_atk, _item_def, _item_discription, _Item_Gold)
         {
             Item_Name = _item_name;
             Item_Atk = 0;
             Item_Def = _item_def;
             Item_Discription = _item_discription;
+            Item_Gold = _Item_Gold;
         }
     }
 
     public class Potion : Item
     {
         public int Potion_Healing;
-        public Potion(string _potion_name, int _potion_atk, int _potion_def, string _potion_discription, int _potion_Healing) : base(_potion_name, _potion_atk, _potion_def, _potion_discription)
+        public Potion(string _potion_name, int _potion_atk, int _potion_def, string _potion_discription, int _potion_Healing, int _Item_Gold) : base(_potion_name, _potion_atk, _potion_def, _potion_discription, _Item_Gold)
         {
             Item_Name = _potion_name;
             Item_Atk = _potion_atk;
             Item_Def = _potion_def;
             Item_Discription = _potion_discription;
             Potion_Healing = _potion_Healing;
+            Item_Gold = _Item_Gold;
         }
     }
 
@@ -492,11 +647,11 @@ namespace TextRpg_Test01
     {
         public string Name { get; }
         public string Job { get; }
-        public int Level { get; }
+        public int Level { get; set; }
         public int Atk { get; set; }
         public int Def { get; set; }
-        public int Hp { get; }
-        public int Gold { get; }
+        public int Hp { get; set; }
+        public int Gold { get; set; }
 
         public Character(string name, string job, int level, int atk, int def, int hp, int gold)
         {
