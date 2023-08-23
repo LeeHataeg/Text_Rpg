@@ -36,7 +36,6 @@ namespace TextRpg_Test01
             GameDataSetting();
             DisplayGameIntro();
         }
-
         public static void GameDataSetting()
         {
             // 캐릭터 정보 세팅
@@ -44,22 +43,23 @@ namespace TextRpg_Test01
 
             // 아이템 정보 세팅
             //방어구
-            steelArmor = new Armor("무쇠갑옷", 0, 5, "무쇠로 만들어져 튼튼한 갑옷입니다.", 500);
-            leatherArmor = new Armor("가죽갑옷", 0, 2, "소가죽으로 만들어진 낡은 가죽갑옷.", 200);
+            steelArmor = new Armor("무쇠갑옷", 0, 5, 500, "무쇠로 만들어져 튼튼한 갑옷입니다.");
+            leatherArmor = new Armor("가죽갑옷", 0, 2, 200, "소가죽으로 만들어진 낡은 가죽갑옷.");
 
             //무기
-            oldSword = new Weapon("낡은 검", 2, 0, "쉽게 볼 수 있는 낡은 검입니다.", 800);
-            gladius = new Weapon("글라디우스", 6, 0, "찌르기에 특화된 사정거리 짧은 한손검.", 1000);
-            rapier = new Weapon("레이피어", 4, 0, "찌르기에 특화된 사정거리가 긴 한손검.", 900);
+            oldSword = new Weapon("낡은 검", 2, 0, 800, "쉽게 볼 수 있는 낡은 검입니다.");
+            gladius = new Weapon("글라디우스", 6, 0, 1000, "찌르기에 특화된 사정거리 짧은 한손검.");
+            rapier = new Weapon("레이피어", 4, 0, 900, "찌르기에 특화된 사정거리가 긴 한손검.");
 
             //초기 아이템 세팅
             myInven.Add(steelArmor);
             myInven.Add(oldSword);
 
+
             //추가 아이템(포션) : 캐릭터 클래스에 최대 HP 필요
-            lowHpPotion = new Potion("하급 체력 포션", 0, 0, "초보 모험자들이 애용하는 물약. 치유량은 미미하다.(HP +3)", 3 , 500);
-            lowAtkPotion = new Potion("하급 힘 포션", 2, 0, "저레벨 몬스터들을 재료로 고아낸 힘 물약.(Atk +2)", 0, 500); ;
-            lowDefPotion = new Potion("하급 방어력 포션", 0, 2, "일부 몬스터들의 갑각을 재료로 고아낸 물약. 사용 후 피부가 갈라진다.(Def +2)", 0, 300);
+            lowHpPotion = new Potion("하급 체력 포션", 0, 0, 400, "초보 모험자들이 애용하는 물약. 치유량은 미미하다." , 3);
+            lowAtkPotion = new Potion("하급 힘 포션", 2, 0, 300, "저레벨 몬스터들을 재료로 고아낸 힘 물약.", 0); ;
+            lowDefPotion = new Potion("하급 방어력 포션", 0, 2, 200, "일부 몬스터들의 갑각을 재료로 고아낸 물약" ,0);
 
             //상점 판매 아이템
             shopItem.Add(leatherArmor);
@@ -197,26 +197,46 @@ namespace TextRpg_Test01
             int i = myInven.Count;
             int j = 0;
 
+            string InvenStr_Name = "          |";
+            string InvenStr_Effect  = "          |";
+            string InvenStr_Explain = "                                                            |";
+            string Replace_Name = string.Empty;
+            string Replace_Effect = string.Empty;
+            string Replace_Explain = string.Empty;
+
             while (j < i)
             {
-                Console.Write($"-   {myInven[j].Item_Name}");
-                Console.ForegroundColor = ConsoleColor.White;
+                int nameLength =  myInven[j].Item_Name.Count();
+                Replace_Name = InvenStr_Name.Remove(0, nameLength)
+                                            .Insert(0, myInven[j].Item_Name);
+
+
+
+                //몇 자리 숫자인지(X / 10  +1(1의 자리는 10으로 나눴을 때 0)) +6(" 공격력 +"/" 방어력 +" 등 텍스트)
                 if (myInven[j].Item_Atk == 0)
                 {
-                    //if Item == armor
-                    Console.Write("    | 방어력 ");
-                    Console.ForegroundColor = ConsoleColor.Magenta;
-                    Console.Write(myInven[j].Item_Def);
+                    //armor
+                    int effectLength = HowManyDigit(myInven[j].Item_Def) + 6;
+                    Replace_Effect = InvenStr_Effect.Remove(0, effectLength)
+                                                    .Insert(0, " 방어력 +" + Convert.ToString(myInven[j].Item_Def));
                 }
                 else
                 {
-                    //if item == weapon
-                    Console.Write("    | 공격력 ");
-                    Console.ForegroundColor = ConsoleColor.Magenta;
-                    Console.Write(myInven[j].Item_Atk);
+                    //weapon
+                    int effectLength = HowManyDigit(myInven[j].Item_Atk) + 6;
+                    Replace_Effect = InvenStr_Effect.Remove(0, effectLength)
+                                                    .Insert(0, " 공격력 +" + Convert.ToString(myInven[j].Item_Atk));
                 }
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine($" | {myInven[j].Item_Discription}");
+
+
+                int explainLength = myInven[j].Item_Discription.Length;
+                Replace_Explain = InvenStr_Explain.Remove(0, explainLength)
+                                                  .Insert(0, myInven[j].Item_Discription);
+
+                Console.Write("- ");
+                Console.Write(Replace_Name);
+                Console.Write(Replace_Effect);
+                Console.WriteLine(Replace_Explain);
 
                 j++;
             }
@@ -257,30 +277,49 @@ namespace TextRpg_Test01
             Console.WriteLine();
             Console.WriteLine("[아이템 목록]");
 
+            string InvenStr_Name = "          |";
+            string InvenStr_Effect = "          |";
+            string InvenStr_Explain = "                              |";
+            string Replace_Name = string.Empty;
+            string Replace_Effect = string.Empty;
+            string Replace_Explain = string.Empty;
+
             while (j < i)
             {
-                Console.Write("-  ");
-                Console.ForegroundColor = ConsoleColor.Magenta;
-                Console.Write(j + 1);
-                Console.ForegroundColor = ConsoleColor.White;
+                int nameLength = myInven[j].Item_Name.Count();
+                Replace_Name = InvenStr_Name.Remove(0, nameLength)
+                                            .Insert(0, myInven[j].Item_Name);
 
+
+
+                //몇 자리 숫자인지(X / 10  +1(1의 자리는 10으로 나눴을 때 0)) +6(" 공격력 +"/" 방어력 +" 등 텍스트)
                 if (myInven[j].Item_Atk == 0)
                 {
-                    //if Item == armor
-                    Console.Write($" {myInven[j].Item_Name}    | 방어력 ");
-                    Console.ForegroundColor = ConsoleColor.Magenta;
-                    Console.Write(myInven[j].Item_Def);
+                    //armor
+                    int effectLength = (myInven[j].Item_Def) / 10 + 1 + 6;
+                    Replace_Effect = InvenStr_Effect.Remove(0, effectLength)
+                                                .Insert(0, " 방어력 +" + Convert.ToString(myInven[j].Item_Def));
                 }
                 else
                 {
-                    //if item == weapon
-                    Console.Write($" {myInven[j].Item_Name}    | 공격력 ");
-                    Console.ForegroundColor = ConsoleColor.Magenta;
-                    Console.Write(myInven[j].Item_Atk);
+                    //weapon
+                    int effectLength = (myInven[j].Item_Atk) / 10 + 1 + 6;
+                    Replace_Effect = InvenStr_Effect.Remove(0, effectLength)
+                                                .Insert(0, " 공격력 +" + Convert.ToString(myInven[j].Item_Atk));
                 }
 
+
+                int explainLength = myInven[j].Item_Discription.Count();
+                Replace_Explain = InvenStr_Explain.Remove(0, explainLength)
+                                                  .Insert(0, myInven[j].Item_Discription);
+
+                Console.Write($"- ");
+                Console.ForegroundColor = ConsoleColor.Magenta;
+                Console.Write($"{j + 1} ");
                 Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine($" | {myInven[j].Item_Discription}");
+                Console.Write(Replace_Name);
+                Console.Write(Replace_Effect);
+                Console.WriteLine(Replace_Explain);
 
                 j++;
             }
@@ -385,16 +424,16 @@ namespace TextRpg_Test01
                     DisplayGameIntro();
                     break;
                 case 1:
-                    //DoBuy();
+                    ShopBuy();
                     break;
                 case 2:
-                    //DoSell();
+                    ShopSell();
                     break;
             }
         }
-
         public static void ShopBuy()
         {
+            Console.Clear();
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("아이템 구매");
             Console.ForegroundColor = ConsoleColor.White;
@@ -409,7 +448,11 @@ namespace TextRpg_Test01
 
             while (j < i)
             {
-                Console.Write($"-   {shopItem[j].Item_Name}");
+                Console.Write("- ");
+                Console.ForegroundColor = ConsoleColor.Magenta;
+                Console.Write($"{j + 1} ");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write(shopItem[j].Item_Name);
                 Console.ForegroundColor = ConsoleColor.White;
                 if (shopItem[j].Item_Atk == 0)
                 {
@@ -453,7 +496,7 @@ namespace TextRpg_Test01
             }
             else
             {
-                if(player.Gold < shopItem[i-1].Item_Gold)
+                if(player.Gold < shopItem[input - 1].Item_Gold)
                 {
                     Console.WriteLine("소지하신 골드가 적습니다.");
                     ShopBuy();
@@ -461,8 +504,8 @@ namespace TextRpg_Test01
                 else
                 {
                     Console.WriteLine("구매를 완료했습니다.");
-                    player.Gold -= shopItem[i-1].Item_Gold;
-                    myInven.Add(shopItem[i - 1]);
+                    player.Gold -= shopItem[input - 1].Item_Gold;
+                    myInven.Add(shopItem[input - 1]);
                     //shopItem.RemoveAt();
                     ShopBuy();
                 }
@@ -470,6 +513,7 @@ namespace TextRpg_Test01
         }
         public static void ShopSell()
         {
+            Console.Clear();
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("아이템 판매");
             Console.ForegroundColor = ConsoleColor.White;
@@ -483,7 +527,58 @@ namespace TextRpg_Test01
             int i = myInven.Count();
             int j = 0;
 
+            string InvenStr_Name    = "          |";
+            string InvenStr_Effect  = "          |";
+            string InvenStr_Gold    = "               |";
+            string InvenStr_Explain = "                              |";
+            string Replace_Name     = string.Empty;
+            string Replace_Effect   = string.Empty;
+            string Replace_Gold     = string.Empty;
+            string Replace_Explain  = string.Empty;
 
+            while (j < i)
+            {
+                int nameLength = myInven[j].Item_Name.Count();
+                Replace_Name = InvenStr_Name.Remove(0, nameLength)
+                                            .Insert(0, myInven[j].Item_Name);
+
+
+
+                //몇 자리 숫자인지(X / 10  +1(1의 자리는 10으로 나눴을 때 0)) +6(" 공격력 +"/" 방어력 +" 등 텍스트)
+                if (myInven[j].Item_Atk == 0)
+                {
+                    //armor
+                    int effectLength = HowManyDigit(myInven[j].Item_Def) + 6;
+                    Replace_Effect = InvenStr_Effect.Remove(0, effectLength)
+                                                    .Insert(0, " 방어력 +" + Convert.ToString(myInven[j].Item_Def));
+                }
+                else
+                {
+                    //weapon
+                    int effectLength = HowManyDigit(myInven[j].Item_Atk) + 6;
+                    Replace_Effect = InvenStr_Effect.Remove(0, effectLength)
+                                                    .Insert(0, " 공격력 +" + Convert.ToString(myInven[j].Item_Atk));
+                }
+
+                int goldLength = HowManyDigit(myInven[j].Item_Gold) + 6;
+                Replace_Gold = InvenStr_Gold.Remove(0, goldLength)
+                                            .Insert(0, "가격 : " + Convert.ToString(myInven[j].Item_Gold) + "G");
+
+                int explainLength = myInven[j].Item_Discription.Count();
+                Replace_Explain = InvenStr_Explain.Remove(0, explainLength)
+                                                  .Insert(0, myInven[j].Item_Discription);
+
+                Console.Write($"- ");
+                Console.ForegroundColor = ConsoleColor.Magenta;
+                Console.Write($"{j + 1} ");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write(Replace_Name);
+                Console.Write(Replace_Effect);
+                Console.Write(Replace_Gold);
+                Console.WriteLine(Replace_Explain);
+
+                j++;
+            }
 
             Console.WriteLine();
             Console.ForegroundColor = ConsoleColor.Magenta;
@@ -505,9 +600,22 @@ namespace TextRpg_Test01
             else
             {
                 Console.WriteLine("판매를 완료했습니다.");
-                player.Gold += myInven[i - 1].Item_Gold*85/100;
-                shopItem.Add(myInven[i-1]);
-                myInven.RemoveAt(i-1);
+                player.Gold += myInven[input-1].Item_Gold*85/100;
+                myInven.RemoveAt(input-1);
+                DisplayShop();
+            }
+        }
+        public static int HowManyDigit(int jungsu)
+        {
+            int i = 0;
+            while(true)
+            {
+                jungsu /= 10;
+                if(jungsu <= 0)
+                {
+                    return (i+1);
+                }
+                i++;
             }
         }
         public static void EquipItem(int i)
@@ -595,52 +703,55 @@ namespace TextRpg_Test01
         public int Item_Def { get; set; }
         public int Item_Gold { get; set; }
         public string Item_Discription { get; set; }
-        public Item(string _item_name, int _item_atk, int _item_def, string _item_discription, int _Item_Gold)
+        public Item(string _item_name, int _item_atk, int _item_def, int _Item_Gold, string _item_discription)
         {
             Item_Name = _item_name;
             Item_Atk = _item_atk;
             Item_Def = _item_def;
-            Item_Discription = _item_discription;
             Item_Gold = _Item_Gold;
+            Item_Discription = _item_discription;
+            
         }
     }
 
     public class Weapon : Item
     {
-        public Weapon(string _item_name, int _item_atk, int _item_def, string _item_discription,int _Item_Gold) : base(_item_name, _item_atk, _item_def, _item_discription, _Item_Gold)
+        public Weapon(string _item_name, int _item_atk, int _item_def,int _Item_Gold, string _item_discription) : base(_item_name, _item_atk, _item_def, _Item_Gold, _item_discription)
         {
             Item_Name = _item_name;
             Item_Atk = _item_atk;
             Item_Def = 0;
-            Item_Discription = _item_discription;
             Item_Gold = _Item_Gold;
+            Item_Discription = _item_discription;
+            
         }
     }
 
     public class Armor : Item
     {
-        public Armor(string _item_name, int _item_atk, int _item_def, string _item_discription, int _Item_Gold) : base(_item_name, _item_atk, _item_def, _item_discription, _Item_Gold)
+        public Armor(string _item_name, int _item_atk, int _item_def, int _Item_Gold, string _item_discription) : base(_item_name, _item_atk, _item_def, _Item_Gold, _item_discription)
         {
             Item_Name = _item_name;
             Item_Atk = 0;
             Item_Def = _item_def;
-            Item_Discription = _item_discription;
             Item_Gold = _Item_Gold;
+            Item_Discription = _item_discription;
         }
+            
+            
     }
 
     public class Potion : Item
     {
         public int Potion_Healing;
-        public Potion(string _potion_name, int _potion_atk, int _potion_def, string _potion_discription, int _potion_Healing, int _Item_Gold) : base(_potion_name, _potion_atk, _potion_def, _potion_discription, _Item_Gold)
+        public Potion(string _potion_name, int _potion_atk, int _potion_def, int _Item_Gold, string _potion_discription, int _potion_Healing) : base(_potion_name, _potion_atk, _potion_def, _Item_Gold, _potion_discription)
         {
             Item_Name = _potion_name;
             Item_Atk = _potion_atk;
             Item_Def = _potion_def;
             Item_Discription = _potion_discription;
-            Potion_Healing = _potion_Healing;
             Item_Gold = _Item_Gold;
-        }
+            Potion_Healing = _potion_Healing;        }
     }
 
     public class Character
